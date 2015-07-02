@@ -54,13 +54,20 @@ router.post('/questions', function(req, res) {
     if (err) {
       res.status(400).json({ error: "Validation Failed" });
     }
-    res.json(savedQuestion);
+    var question = Question.find({})
+                    .sort({createdAt: 'desc'})
+                    .limit(10).exec(function(err, data) {
+      if (err) {
+          res.status(400).json({ error: "Invalid questions request" });
+      }
+      res.json(savedQuestion);
+    });
   });
 });
 router.get('/questions', function(req, res) {
-  var queestion = Question.find({})
+  var question = Question.find({})
                   .sort({createdAt: 'desc'})
-                  .limit(200).exec(function(err, data) {
+                  .limit(10).exec(function(err, data) {
     if (err) {
         res.status(400).json({ error: "Invalid questions request" });
     }
