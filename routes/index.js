@@ -13,11 +13,30 @@ mongoose.connect(process.env.MONGO_URL);
 // });
 
 var Question = mongoose.model("Question", {
-  body: {type: String, required: true},
+  body: {type: String, required: true, unique: true},
   email: {type: String, required: true},
-  createdAt: Date
+  createdAt: {type: Date, default: Date.now(), required: true}
 });
-
+// var add500 = function() {
+//   var fakeUser = {}, fakePost;
+//   for (var i = 0; i < 500; i++) {
+//     fakeUser.body = "Body " + i;
+//     fakeUser.email = i + ".email@example.com";
+//     fakePost = new Question(fakeUser);
+//     fakePost.save(function(err, savedQuestion) {
+//       if (err) {
+//         console.log(err);
+//       }
+//       console.log(savedQuestion);
+//     });
+//   }
+// };
+// add500();
+// temp500Qs = Array.apply(null, Array(500)).map(function(n, i) { return {body: "Q" + i, email: "fake@fake.fake"}; });
+// Question.create(temp500Qs);
+Question.on("index", function(err) {
+  console.log(err);
+});
 router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
@@ -31,12 +50,21 @@ router.post('/test', function(req, res, next) {
 });
 router.post('/questions', function(req, res) {
   var question = new Question(req.body);
-  question.createdAt = new Date();
   question.save(function(err, savedQuestion) {
     if (err) {
       res.status(400).json({ error: "Validation Failed" });
     }
     res.json(savedQuestion);
+  });
+});
+router.get('/questions', function(req, res) {
+  var queestion = Question.find({})
+                  .sort({createdAt: 'desc'})
+                  .limit(200).exec(function(err, data) {
+    if (err) {
+        res.status(400).json({ error: "Invalid questions request" });
+    }
+    res.json(data);
   });
 });
 
