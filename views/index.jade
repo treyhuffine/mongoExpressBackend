@@ -1,0 +1,29 @@
+extends layout
+
+block content
+  h1= title
+  p Welcome to #{title}
+
+  table.table
+    thead
+      tr
+        th HTTP Verb
+        th API endpoint
+        th description
+    tbody
+      tr
+        td GET
+        td /test
+        td Just testing
+      tr
+        td POST
+        td /test
+        td
+          .what echo the server time + body variables in JSON { serverTime: ... }
+          code.example /test {a: 7, b: 'testing'} => {serverTime: "2015...", a: 7, b: "testing"}
+      tr
+        td POST
+        td /questions
+        td
+          .what create and save a new question to the database
+          code.example /questions { email: '', body: '' }
