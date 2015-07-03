@@ -12,7 +12,7 @@ if (process.argv[2]) {
     case "cleardb":
       console.log("Clearing DB");
       var mongoose = require('mongoose');
-      mongoose.connect('mongodb://localhost/test');
+      mongoose.connect(process.env.MONGOLAB_URI);
       var Question = mongoose.model("Question", {});
       Question.remove({}, function(err) {
         process.exit();
