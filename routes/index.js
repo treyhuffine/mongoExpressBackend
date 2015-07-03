@@ -73,7 +73,7 @@ router.get('/question/:slug', function(req, res) {
     if (err) {
         res.status(400).json({ error: "Invalid questions request" });
     }
-    res.json(data);
+    res.json(data[0]);
   });
 });
 });
