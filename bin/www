@@ -3,25 +3,27 @@
 /**
  * Module dependencies.
  */
- console.log(process.argv);
 
- if (process.argv[2]) {
-   console.log("Action");
-   switch(process.argv[2]) {
-     case "cleardb":
-       console.log("Clearing DB");
-       var mongoose = require('mongoose');
-       mongoose.connect(process.env.MONGO_URL);
-       var Question = mongoose.model("Question", {});
-       Question.remove({});
-       break;
-     default:
-       console.log("Unknown action");
-   }
+console.log(process.argv);
 
-   process.exit();
-   return;
- }
+if (process.argv[2]) {
+  console.log("Action");
+  switch(process.argv[2]) {
+    case "cleardb":
+      console.log("Clearing DB");
+      var mongoose = require('mongoose');
+      mongoose.connect('mongodb://localhost/test');
+      var Question = mongoose.model("Question", {});
+      Question.remove({}, function(err) {
+        process.exit();
+      });
+      break;
+    default:
+      console.log("Unknown action");
+  }
+  return;
+}
+
 
 var app = require('../app');
 var debug = require('debug')('mongoExpress:server');

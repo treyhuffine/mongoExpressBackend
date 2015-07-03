@@ -30,6 +30,9 @@ Question.on("index", function(err) {
 router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
+router.get('/tests', function(req, res, next) {
+  res.render('tests');
+});
 router.get('/test', function(req, res, next) {
   res.send('Just testing');
 });
@@ -41,8 +44,7 @@ router.post('/test', function(req, res, next) {
 router.post('/questions', function(req, res) {
   var question = new Question(req.body);
 
-  question.slug = slug(req.body.body);
-  console.log(question.slug);
+  question.slug = slug(req.body.body || '');
   question.gravatarUrl = "http://www.gravatar.com/avatar/" + MD5(req.body.email);
 
   question.save(function(err, savedQuestion) {
