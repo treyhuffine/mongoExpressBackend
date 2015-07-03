@@ -68,6 +68,14 @@ router.get('/questions', function(req, res) {
     }
     res.json(data);
   });
+router.get('/question/:slug', function(req, res) {
+  var question = Question.find({'slug': req.params.slug}, function(err, data) {
+    if (err) {
+        res.status(400).json({ error: "Invalid questions request" });
+    }
+    res.json(data);
+  });
+});
 });
 
 module.exports = router;
