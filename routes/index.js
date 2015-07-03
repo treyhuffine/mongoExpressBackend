@@ -3,7 +3,7 @@ var router = express.Router();
 var mongoose = require('mongoose');
 var MD5 = require("MD5");
 
-mongoose.connect(process.env.MONGO_URL);
+mongoose.connect("mongodb://localhost/test");
 
 // var User = mongoose.model("users", { name: String });
 //
@@ -19,9 +19,9 @@ var Question = mongoose.model("Question", {
   gravatarUrl: { type: String, required: true },
   createdAt: {type: Date, default: Date.now(), required: true}
 });
-// add500();
-// temp500Qs = Array.apply(null, Array(500)).map(function(n, i) { return {body: "Q" + i, email: "fake@fake.fake"}; });
-// Question.create(temp500Qs);
+
+temp500Qs = Array.apply(null, Array(500)).map(function(n, i) { return {body: "Q" + i, email: "fake@fake.fake"}; });
+Question.create(temp500Qs);
 Question.on("index", function(err) {
   console.log(err);
 });
