@@ -85,13 +85,23 @@ describe('Our API', function(){
         });
     });
   });
-  // describe('DELETE /questions/:questionCode', function(){
-  //   it("returns 200 if question is removed from db", function(done) {
-  //     request.delete("/questions/one-test-question").end(function(err, res) {
-  //       if (err) { throw err; }
-  //       expect(res.status).to.equal(200);
-  //       done();
-  //     });
-  //   });
-  // });
+  describe('DELETE /questions/:questionCode', function(){
+    it("returns 404 if the code does not exist", function(done) {
+      request.del("/questions/dsajflkasdjfjadsjflkjaslkdf").end(function(err, res) {
+        if (err) { throw err; }
+        expect(res.status).to.equal(404);
+        done();
+      });
+    });
+  });
+  describe('DELETE /questions/:questionCode', function() {
+    it("delete the question", function(done) {
+      request.del("/questions/one-test-question")
+        .end(function(err, res) {
+          if (err) { throw errr; }
+          expect(res.status).to.equal(200);
+          done();
+        });
+    });
+  });
 });
