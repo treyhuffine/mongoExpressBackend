@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var mongoose = require('mongoose');
+var MD5 = require("MD5");
 
 mongoose.connect(process.env.MONGO_URL);
 
@@ -15,22 +16,9 @@ mongoose.connect(process.env.MONGO_URL);
 var Question = mongoose.model("Question", {
   body: {type: String, required: true, unique: true},
   email: {type: String, required: true},
+  gravatarUrl: { type: String, required: true },
   createdAt: {type: Date, default: Date.now(), required: true}
 });
-// var add500 = function() {
-//   var fakeUser = {}, fakePost;
-//   for (var i = 0; i < 500; i++) {
-//     fakeUser.body = "Body " + i;
-//     fakeUser.email = i + ".email@example.com";
-//     fakePost = new Question(fakeUser);
-//     fakePost.save(function(err, savedQuestion) {
-//       if (err) {
-//         console.log(err);
-//       }
-//       console.log(savedQuestion);
-//     });
-//   }
-// };
 // add500();
 // temp500Qs = Array.apply(null, Array(500)).map(function(n, i) { return {body: "Q" + i, email: "fake@fake.fake"}; });
 // Question.create(temp500Qs);
@@ -50,6 +38,9 @@ router.post('/test', function(req, res, next) {
 });
 router.post('/questions', function(req, res) {
   var question = new Question(req.body);
+
+  question.gravatarUrl = "http://www.gravatar.com/avatar/" + MD5(req.body.email);
+
   question.save(function(err, savedQuestion) {
     if (err) {
       res.status(400).json({ error: "Validation Failed" });
