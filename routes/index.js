@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var mongoose = require('mongoose');
 var MD5 = require("MD5");
+var slug = require("slug");
 
 mongoose.connect("mongodb://localhost/test");
 
@@ -14,6 +15,7 @@ mongoose.connect("mongodb://localhost/test");
 // });
 
 var Question = mongoose.model("Question", {
+  slug: { type: String, required: true, unique: true },
   body: {type: String, required: true, unique: true},
   email: {type: String, required: true},
   gravatarUrl: { type: String, required: true },
@@ -39,6 +41,8 @@ router.post('/test', function(req, res, next) {
 router.post('/questions', function(req, res) {
   var question = new Question(req.body);
 
+  question.slug = slug(req.body.body);
+  console.log(question.slug);
   question.gravatarUrl = "http://www.gravatar.com/avatar/" + MD5(req.body.email);
 
   question.save(function(err, savedQuestion) {
@@ -46,7 +50,7 @@ router.post('/questions', function(req, res) {
       res.status(400).json({ error: "Validation Failed" });
     }
     var question = Question.find({})
-                    .sort({createdAt: 'desc'})
+                    .sort({createdAt: -1})
                     .limit(10).exec(function(err, data) {
       if (err) {
           res.status(400).json({ error: "Invalid questions request" });
@@ -57,7 +61,7 @@ router.post('/questions', function(req, res) {
 });
 router.get('/questions', function(req, res) {
   var question = Question.find({})
-                  .sort({createdAt: 'desc'})
+                  .sort({createdAt: -1})
                   .limit(10).exec(function(err, data) {
     if (err) {
         res.status(400).json({ error: "Invalid questions request" });
