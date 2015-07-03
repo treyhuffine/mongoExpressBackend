@@ -72,7 +72,6 @@ router.get("/questions", function(req, res) {
     res.json(questions);
   });
 });
-
 router.get("/questions/:questionCode", function(req, res) {
   Question.findOne({slug: req.params.questionCode}).exec(function(err, question) {
     if (err) {
@@ -84,6 +83,20 @@ router.get("/questions/:questionCode", function(req, res) {
     }
     res.json(question);
   });
+});
+router.patch("/questions/:questionCode", function(req, res) {
+  Question.findOneAndUpdate({ slug: req.params.questionCode }, req.body, { new: true },
+    function(err, updatedQuestion) {
+      console.log(updatedQuestion);
+      if (err) {
+        console.log(err);
+        res.status(400).json({ error: "Could not read questions data" });
+      }
+      if (!updatedQuestion) {
+        res.status(404);
+      }
+      res.json(updatedQuestion);
+    });
 });
 
 module.exports = router;

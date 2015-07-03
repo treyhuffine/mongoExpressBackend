@@ -63,6 +63,28 @@ describe('Our API', function(){
       });
     });
   });
+  describe('PATCH /questions/:questionCode', function(){
+    it("returns 404 if the code does not exist", function(done) {
+      request.patch("/questions/dsajflkasdjfjadsjflkjaslkdf").end(function(err, res) {
+        if (err) { throw err; }
+        expect(res.status).to.equal(404);
+        done();
+      });
+    });
+  });
+  describe('PATCH /questions/:questionCode', function() {
+    it("update the question with new data", function(done) {
+      request.patch("/questions/one-test-question")
+        .send({body: 'it is new now', email: 'hacker@test.com'})
+        .end(function(err, res) {
+          if (err) { throw errr; }
+          expect(res.status).to.equal(200);
+          expect(res.body.body).to.equal('it is new now');
+          expect(res.body.email).to.equal('hacker@test.com');
+          done();
+        });
+    });
+  });
   // describe('DELETE /questions/:questionCode', function(){
   //   it("returns 200 if question is removed from db", function(done) {
   //     request.delete("/questions/one-test-question").end(function(err, res) {
