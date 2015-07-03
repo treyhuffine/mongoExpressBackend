@@ -20,8 +20,8 @@ var Question = mongoose.model("Question", {
   createdAt: {type: Date, default: Date.now(), required: true}
 });
 
-temp500Qs = Array.apply(null, Array(500)).map(function(n, i) { return {body: "Q" + i, email: "fake@fake.fake"}; });
-Question.create(temp500Qs);
+// temp500Qs = Array.apply(null, Array(500)).map(function(n, i) { return {body: "Q" + i, email: "fake@fake.fake"}; });
+// Question.create(temp500Qs);
 Question.on("index", function(err) {
   console.log(err);
 });
