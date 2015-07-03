@@ -31,7 +31,9 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
 router.get('/tests', function(req, res, next) {
-  res.render('tests');
+  Question.remove({}, function() {
+    res.render('tests');
+  });
 });
 router.get('/test', function(req, res, next) {
   res.send('Just testing');
@@ -61,23 +63,27 @@ router.post('/questions', function(req, res) {
     });
   });
 });
-router.get('/questions', function(req, res) {
-  var question = Question.find({})
-                  .sort({createdAt: -1})
-                  .limit(10).exec(function(err, data) {
+router.get("/questions", function(req, res) {
+  Question.find({}).sort({ createdAt: 'desc' }).limit(3).exec(function(err, questions) {
     if (err) {
-        res.status(400).json({ error: "Invalid questions request" });
+      console.log(err);
+      res.status(400).json({ error: "Could not read questions data" });
     }
-    res.json(data);
-  });
-router.get('/question/:slug', function(req, res) {
-  var question = Question.find({'slug': req.params.slug}, function(err, data) {
-    if (err) {
-        res.status(400).json({ error: "Invalid questions request" });
-    }
-    res.json(data[0]);
+    res.json(questions);
   });
 });
+
+router.get("/questions/:questionCode", function(req, res) {
+  Question.findOne({slug: req.params.questionCode}).exec(function(err, question) {
+    if (err) {
+      console.log(err);
+      res.status(400).json({ error: "Could not read questions data" });
+    }
+    if (!question) {
+      res.status(404);
+    }
+    res.json(question);
+  });
 });
 
 module.exports = router;
