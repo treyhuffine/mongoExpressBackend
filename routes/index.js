@@ -64,7 +64,7 @@ router.post('/questions', function(req, res) {
   });
 });
 router.get("/questions", function(req, res) {
-  Question.find({}).sort({ createdAt: 'desc' }).limit(3).exec(function(err, questions) {
+  Question.find({}).sort({ createdAt: 'desc' }).limit(20).exec(function(err, questions) {
     if (err) {
       console.log(err);
       res.status(400).json({ error: "Could not read questions data" });
