@@ -20,6 +20,7 @@ var Question = mongoose.model("Question", {
   body: {type: String, required: true, unique: true},
   email: {type: String, required: true},
   gravatarUrl: { type: String, required: true },
+  uid: { type: String, required: true },
   createdAt: {type: Date, default: Date.now(), required: true}
 });
 
@@ -49,7 +50,7 @@ router.post('/questions', function(req, res) {
 
   question.slug = slug(req.body.body || '');
   question.gravatarUrl = "http://www.gravatar.com/avatar/" + MD5(req.body.email);
-
+  console.log(question);
   question.save(function(err, savedQuestion) {
     if (err) {
       res.status(400).json({ error: "Validation Failed" });
@@ -99,6 +100,7 @@ router.patch("/questions/:questionCode", function(req, res) {
     });
 });
 router.delete("/questions/:questionCode", function(req, res) {
+  console.log("questin");
   Question.findOneAndRemove({ slug: req.params.questionCode },
     function(err, updatedQuestion) {
       if (err) {
