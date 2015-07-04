@@ -20,8 +20,14 @@ var Question = mongoose.model("Question", {
   body: {type: String, required: true, unique: true},
   email: {type: String, required: true},
   gravatarUrl: { type: String, required: true },
-  uid: { type: String, required: true },
-  createdAt: {type: Date, default: Date.now(), required: true}
+  createdAt: {type: Date, default: Date.now(), required: true},
+  answers: [{
+    body: String,
+    email: String,
+    slug: String,
+    gravatarUrl: String,
+    createdAt: Date
+  }]
 });
 
 // temp500Qs = Array.apply(null, Array(500)).map(function(n, i) { return {body: "Q" + i, email: "fake@fake.fake"}; });
@@ -55,14 +61,7 @@ router.post('/questions', function(req, res) {
     if (err) {
       res.status(400).json({ error: "Validation Failed" });
     }
-    var question = Question.find({})
-                    .sort({createdAt: -1})
-                    .limit(10).exec(function(err, data) {
-      if (err) {
-          res.status(400).json({ error: "Invalid questions request" });
-      }
-      res.json(savedQuestion);
-    });
+    res.json(savedQuestion);
   });
 });
 router.get("/questions", function(req, res) {
@@ -111,6 +110,26 @@ router.delete("/questions/:questionCode", function(req, res) {
         res.status(404);
       }
       res.json({message: 'question deleted'});
+    });
+});
+router.post("/questions/:questionCode/answers", function(req, res) {
+  Question.findOne({ slug: req.params.questionCode },
+    function(err, question) {
+      if (err) {
+        console.log(err);
+        res.status(400).json({ error: "Could not read questions data" });
+      }
+      if (!question) {
+        res.status(404);
+      }
+      question.answers.push(req.body);
+      question.save(function(err, savedQuestion) {
+        if (err) {
+          console.log(err);
+          res.status(400).json({ error: "Could not read questions data" });
+        }
+        res.json(savedQuestion);
+      });
     });
 });
 
