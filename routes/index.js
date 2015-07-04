@@ -24,9 +24,8 @@ var Question = mongoose.model("Question", {
   answers: [{
     body: String,
     email: String,
-    slug: String,
     gravatarUrl: String,
-    createdAt: Date
+    createdAt: {type: Date, default: Date.now()}
   }]
 });
 
@@ -122,6 +121,8 @@ router.post("/questions/:questionCode/answers", function(req, res) {
       if (!question) {
         res.status(404);
       }
+      var answer = req.body;
+      answer.gravatarUrl = "http://www.gravatar.com/avatar/" + MD5(req.body.email);
       question.answers.push(req.body);
       question.save(function(err, savedQuestion) {
         if (err) {
