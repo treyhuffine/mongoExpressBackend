@@ -85,6 +85,7 @@ router.get("/questions/:questionCode", function(req, res) {
   });
 });
 router.patch("/questions/:questionCode", function(req, res) {
+  console.log("patch",req.params.questionCode, req);
   Question.findOneAndUpdate({ slug: req.params.questionCode }, req.body, { new: true },
     function(err, updatedQuestion) {
       if (err) {
@@ -98,7 +99,6 @@ router.patch("/questions/:questionCode", function(req, res) {
     });
 });
 router.delete("/questions/:questionCode", function(req, res) {
-  console.log("questin");
   Question.findOneAndRemove({ slug: req.params.questionCode },
     function(err, updatedQuestion) {
       if (err) {
